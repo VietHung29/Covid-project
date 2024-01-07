@@ -1,21 +1,21 @@
 
 # Problem 1: Determining the correlation between the number of people vaccinated and the number of people dying each day from covid-19
 
-To solve this problem, I will using SQL to query to get data comparing the trend of the number of vaccines administered and the number of new deaths each day.
-By December 2020, the new covid-19 vaccine was licensed and started to be used in some countries. However, by querying, I found that 198 countries have been affected by the epidemic.
+To solve this problem, I will use SQL to query to get data comparing the trend of the number of vaccines administered and the number of new deaths each day.
+By December 2020, the new COVID-19 vaccine was licensed and started to be used in some countries. However, by querying, I found that 198 countries have been affected by the epidemic.
 
 ```
 SELECT location, total_cases
-FROM PortfolioProject..CovidDeaths
+FROM PortfolioProject..CovidDeathsdata
 WHERE	date = '2020-12-30'
 		AND total_cases != 0
 		AND location is not NULL
 GROUP BY location, total_cases
 
 ```
-Therefore, getting data from all countries will not be accurate. So I'll do a query to identify the top 5 most vaccinated countries and compare.
+Therefore, getting data from all countries will not be accurate. So I'll do a query to identify the top 5 most vaccinated countries and compare them.
 
-First I will create a temporary table to import data from the two tables CovidDeaths and CovidVaccinations together.
+First I will create a temporary table to import data from the table.
 ```
 WITH deavac AS (SELECT dea.date, dea.location,
 				CASE WHEN total_cases is NULL THEN 0
@@ -24,10 +24,7 @@ WITH deavac AS (SELECT dea.date, dea.location,
 				 ELSE new_deaths END AS new_deaths,
 				CASE WHEN total_vaccinations is NULL THEN 0
 				ELSE total_vaccinations END AS total_vaccinations
-FROM PortfolioProject..CovidDeaths AS dea
-JOIN PortfolioProject..CovidVaccinations AS vac
-ON  dea.location = vac.location
-	AND dea.date = vac.date
+FROM PortfolioProject..CovidDeathsdata AS dea
 WHERE dea.continent is not NULL)
 
 ```
